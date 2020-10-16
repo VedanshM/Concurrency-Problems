@@ -37,6 +37,12 @@ int main() {
 			pthread_join(students[i].tid, NULL);
 	}
 
+	for (int i = 0; i < no_of_zone; i++)
+		pthread_cancel(zones[i].tid);
+
+	for (int i = 0; i < no_of_comp; i++)
+		pthread_cancel(companies[i].tid);
+
 	printf(RST_COL "\n\nSimulation Over.");
 	fflush(0);
 }
