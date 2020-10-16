@@ -21,6 +21,24 @@
                 "isDefault": true,
                 "kind": "build"
             }
+        },
+        {
+            "label": "compile gcc",
+            "type": "shell",
+            "command": "gcc -g -lm -pthread '${file}'",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "focus": true,
+                "echo": true
+            },
+            "problemMatcher": {
+                "base": "$gcc"
+            },
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "group": "build"
         }
     ]
 }
