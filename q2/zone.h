@@ -29,7 +29,7 @@ void *zone_thread(void *arg) {
 			pthread_mutex_unlock(&zn->mutex);
 		}
 
-		printf(BLU_COL "Pharmaceutical Company %d has delivered vaccines to Vaccination zone %d,"
+		printf(BLU_COL "Company %d has delivered vaccines to Zone %d,"
 					   " resuming vaccinations now.\n" RST_COL,
 			   zn->comp->id, zn->id);
 		fflush(0);
@@ -41,7 +41,7 @@ void *zone_thread(void *arg) {
 			pthread_mutex_unlock(&zn->mutex);
 
 			//waiting for students to acquire slots
-			printf(BLU_COL "Vaccination Zone %d is ready to vaccinate with %d slots\n" RST_COL, zn->id, zn->slots);
+			printf(BLU_COL "Zone %d is ready to vaccinate with %d slots\n" RST_COL, zn->id, zn->slots);
 			fflush(0);
 			zn->studd_can_go = 0;
 			zn->phase = SEARCHING_STUDS;
@@ -59,7 +59,7 @@ void *zone_thread(void *arg) {
 			}
 
 			//vaccinating
-			printf(BLU_COL "Vaccination Zone %d entering Vaccination Phase\n", zn->id);
+			printf(BLU_COL "Zone %d entering Vaccination Phase\n", zn->id);
 			fflush(0);
 			sleep(2);
 			zn->studd_can_go = 1;
@@ -74,7 +74,7 @@ void *zone_thread(void *arg) {
 			if (zn->batch->vacc_left == 0) {
 				zn->batch = NULL; // free this in compnay
 				pthread_mutex_unlock(&zn->comp->mutex);
-				printf(BLU_COL "Vaccination Zone %d has run out of vaccines", zn->id);
+				printf(BLU_COL "Zone %d has run out of vaccines", zn->id);
 				fflush(0);
 				break;
 			}

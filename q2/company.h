@@ -22,11 +22,11 @@ void *company_thread(void *arg) {
 		int cap = randInt(10, 20);
 		for (int i = 0; i < cmp->batch_cnt; i++)
 			cmp->batches[i].capacity = cmp->batches[i].vacc_left = cap;
-		printf(YLW_COL "Pharmaceutical Company %d is preparing %d batches of vaccines which have success probability %.2f\n" RST_COL,
+		printf(YLW_COL "Company %d is preparing %d batches of vaccines with success rate: %.2f\n" RST_COL,
 			   cmp->id, cmp->batch_cnt, cmp->prob);
 		fflush(0);
 		sleep(randInt(2, 5));
-		printf(YLW_COL "Pharmaceutical Company %d has prepared %d batches of vaccines which have success probability %.2f.\n"
+		printf(YLW_COL "Company %d has prepared %d batches of vaccines with success rate: %.2f.\n"
 					   "Waiting for all the vaccines to be used to resume production\n\n" RST_COL,
 			   cmp->id, cmp->batch_cnt, cmp->prob);
 		fflush(0);
@@ -35,7 +35,6 @@ void *company_thread(void *arg) {
 			int anyleft = 0;
 			for (int i = 0; i < cmp->batch_cnt; i++) {
 				pthread_mutex_lock(&cmp->mutex);
-				// fprintf(stderr, "DEBUG: bach.vccleft = %d", cmp->batches[i].vacc_left);
 				if (cmp->batches[i].vacc_left > 0) {
 					anyleft++;
 				}
@@ -57,7 +56,7 @@ int distribute_batches(company_t *cmp) {
 		for (int i = 0; i < no_of_zone; i++) {
 			pthread_mutex_lock(&zones[i].mutex);
 			if (zones[i].batch == NULL) {
-				printf(YLW_COL "Pharmaceutical Company %d is delivering a vaccine batch to Vaccination Zone %d which has success probability %.2f\n" RST_COL,
+				printf(YLW_COL "Company %d is delivering a vaccine batch to Zone %d which has success probability %.2f\n" RST_COL,
 					   cmp->id, zones[i].id, cmp->prob);
 				fflush(0);
 				zones[i].batch = &cmp->batches[cmp->batch_cnt - batches_left];

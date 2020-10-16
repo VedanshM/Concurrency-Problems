@@ -48,7 +48,7 @@ void *stud_thread(void *arg) {
 }
 
 float get_vaccine(student_t *std) {
-	printf(GRN_COL "STUDENT %d is waiting to be allocated a slot on a Vaccination Zone\n" RST_COL, std->id);
+	printf(GRN_COL "STUDENT %d is waiting to be allocated a slot on a Zone\n" RST_COL, std->id);
 	fflush(0);
 
 	while (1) {
@@ -66,11 +66,11 @@ float get_vaccine(student_t *std) {
 				pthread_mutex_lock(&global_mutex);
 				no_of_students_waiting--;
 				pthread_mutex_unlock(&global_mutex);
-				printf(GRN_COL "Student %d assigned a slot on the Vaccination Zone %d and waiting to be vaccinated\n", std->id, zones[i].id);
+				printf(GRN_COL "Student %d assigned a slot on the Zone %d and waiting to be vaccinated\n", std->id, zones[i].id);
 				fflush(0);
 				while (!zones[i].studd_can_go)
 					;
-				printf(GRN_COL "Student %d on Vaccination Zone %d has been vaccinated which has success probability %.2f\n" RST_COL, std->id, zones[i].id, zones[i].comp->prob);
+				printf(GRN_COL "Student %d on Zone %d has been vaccinated which has success probability %.2f\n" RST_COL, std->id, zones[i].id, zones[i].comp->prob);
 				fflush(0);
 				return zones[i].comp->prob;
 			}

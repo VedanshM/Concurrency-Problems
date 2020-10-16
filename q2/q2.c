@@ -26,14 +26,16 @@ int main() {
 	for (int i = 0; i < no_of_comp; i++)
 		scanf("%f", &companies[i].prob);
 
-	company_init();
-	zones_init();
-	stud_init();
+	if (no_of_comp * no_of_zone == 0) {
+		printf(RED_COL "No resource for vacccination !! \n");
+	} else {
+		company_init();
+		zones_init();
+		stud_init();
 
-	for (int i = 0; i < no_of_students; i++)
-		pthread_join(students[i].tid, NULL);
-
-	// for(int i=0; i<no_of_zone; i++)
+		for (int i = 0; i < no_of_students; i++)
+			pthread_join(students[i].tid, NULL);
+	}
 
 	printf(RST_COL "\n\nSimulation Over.");
 	fflush(0);
