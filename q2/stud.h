@@ -81,7 +81,7 @@ float get_vaccine(student_t *std) {
 int check_vaccine(float pr) {
 	float x = randInt(0, 1000);
 	x /= 1000;
-	if (x < pr)
+	if (x <= pr)
 		return 1;
 	return 0;
 }
