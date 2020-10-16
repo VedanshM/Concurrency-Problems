@@ -29,7 +29,7 @@ void *zone_thread(void *arg) {
 			pthread_mutex_unlock(&zn->mutex);
 		}
 
-		printf(BLU_COL "Company %d has delivered vaccines to Zone %d,"
+		printf(BLU_COL "Zone %d received batch from %d Company."
 					   " resuming vaccinations now.\n" RST_COL,
 			   zn->comp->id, zn->id);
 		fflush(0);
@@ -63,6 +63,7 @@ void *zone_thread(void *arg) {
 			fflush(0);
 			sleep(2);
 			zn->studd_can_go = 1;
+			sleep(2);
 			//vacc done
 
 			/**no one will access var:slots_filled while

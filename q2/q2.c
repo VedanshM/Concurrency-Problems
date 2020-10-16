@@ -43,6 +43,6 @@ int main() {
 	for (int i = 0; i < no_of_comp; i++)
 		pthread_cancel(companies[i].tid);
 
-	printf(RST_COL "\n\nSimulation Over.");
+	printf(RST_COL "\n\nSimulation Over.\n\n");
 	fflush(0);
 }
