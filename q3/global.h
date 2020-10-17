@@ -2,6 +2,7 @@
 #define GLOBAL_H
 
 #define _POSIX_C_SOURCE 200112L
+#include <fcntl.h>
 #include <inttypes.h>
 #include <limits.h>
 #include <pthread.h>
@@ -54,6 +55,7 @@ typedef struct stage {
 	int id;
 	int musician_performing;
 	int singer_performing;
+	struct timespec performance_endtime;
 	pthread_mutex_t mutex;
 } stage_t;
 
@@ -80,7 +82,7 @@ int max(int a, int b) {
 void musicians_init(int n);
 void *musician_thread(void *);
 
-int perform_on_type(musician_t* msc, stage_t* stages, int stg_cnt)
+int perform_on_type(musician_t *msc, stage_t *stages, int stg_cnt)
 
 //   Colour escape codes
 #define BLK_COL "\033[30;1m"

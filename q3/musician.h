@@ -42,8 +42,8 @@ void *musician_thread(void *ptr) {
 
 	int performed = 0;
 	struct timespec ts;
-	ts->tv_sec = impatience_limit;
-	ts->tv_nsec = 0;
+	ts.tv_nsec = 0;
+	ts.tv_sec = impatience_limit;
 	if (msc->stage_type == ELECTRIC_STAGE) {
 		if (sem_timedwait(&ec_sem, &ts) == 0) { //waiting for a EC stage  to get free
 												//one of the stage has to be empty is sem allowed
@@ -80,19 +80,26 @@ int perform_on_type(musician_t *msc, stage_t *stages, int stg_cnt) {
 	int i;
 	if (msc->instr != SINGER) {
 		for (i = 0; i < stg_cnt; i++) {
-			pthread_mutex_lock(stages[i].mutex);
+			pthread_mutex_lock(&stages[i].mutex);
 			//assuming musicians enter completely empty stage
 			if (!stages[i].musician_performing && !stages[i].singer_performing) {
 				stages[i].musician_performing = 1;
-				pthread_mutex_unlock(&(stages[i].mutex));
+				clock_gettime(CLOCK_MONOTONIC_RAW, &stages[i].performance_endtime);
 				int perform_time = randInt(t1, t2);
-				int singer_joined = 0;
-				clock_t performance_st_time = clock();
-				while (clock() - performance_st_time < perform_time * CLOCKS_PER_SEC) {
-						if( !singer_joined  && stages[i].singer_performing]){
-							singer_joined = 1;
-							perform_time += 2;
-						}
+				stages[i].performance_endtime.tv_nsec += perform_time * 1e9;
+				pthread_mutex_unlock(&(stages[i].mutex));
+
+				sleep(perform_time);
+				if (stages[i].singer_performing) {
+					struct timespec ts;
+					clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
+					ts.tv_nsec -= stages[i].performance_endtime.tv_nsec;
+					if (ts.tv_nsec < 0) {
+						ts.tv_nsec += 1e9;
+						ts.tv_sec -= 1;
+					}
+					ts.tv_sec -= stages[i].performance_endtime.tv_sec;
+					nanosleep(&ts, NULL);
 				}
 				stages[i].musician_performing = 0;
 				break;
@@ -101,16 +108,27 @@ int perform_on_type(musician_t *msc, stage_t *stages, int stg_cnt) {
 		}
 	} else {
 		for (int i = 0; i < stg_cnt; i++) {
-			pthread_mutex_lock(stages[i].mutex);
+			pthread_mutex_lock(&stages[i].mutex);
 			if (!stages[i].singer_performing) {
 				stages[i].singer_performing = 1;
-				int musician_there = stages[i].musician_performing;
+				if (stages[i].musician_performing) {
+					stages[i].performance_endtime.tv_sec += 2;
+				} else {
+					clock_gettime(CLOCK_MONOTONIC_RAW, &stages[i].performance_endtime);
+					stages[i].performance_endtime.tv_sec += randInt(t1, t2);
+				}
 				pthread_mutex_unlock(&(stages[i].mutex));
-				if (musician_there)
-					while (stages[i].musician_performing)
-						;
-				else
-					sleep(randInt(t1, t2));
+
+				struct timespec ts;
+				clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
+				ts.tv_nsec -= stages[i].performance_endtime.tv_nsec;
+				if (ts.tv_nsec < 0) {
+					ts.tv_nsec += 1e9;
+					ts.tv_sec -= 1;
+				}
+				ts.tv_sec -= stages[i].performance_endtime.tv_sec;
+				nanosleep(&ts, NULL);
+
 				stages[i].singer_performing = 0;
 			}
 			pthread_mutex_unlock(&(stages[i].mutex));
