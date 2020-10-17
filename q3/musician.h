@@ -94,6 +94,7 @@ int perform_on_type(musician_t *msc, stage_t *stages, int stg_cnt) {
 							perform_time += 2;
 						}
 				}
+				stages[i].musician_performing = 0;
 				break;
 			}
 			pthread_mutex_unlock(&(stages[i].mutex));
@@ -103,10 +104,14 @@ int perform_on_type(musician_t *msc, stage_t *stages, int stg_cnt) {
 			pthread_mutex_lock(stages[i].mutex);
 			if (!stages[i].singer_performing) {
 				stages[i].singer_performing = 1;
-				pthread_mutex_unlock(&(stages[i].mutex));
 				int musician_there = stages[i].musician_performing;
-				while (stages[i].musician_performing)
-					;
+				pthread_mutex_unlock(&(stages[i].mutex));
+				if (musician_there)
+					while (stages[i].musician_performing)
+						;
+				else
+					sleep(randInt(t1, t2));
+				stages[i].singer_performing = 0;
 			}
 			pthread_mutex_unlock(&(stages[i].mutex));
 		}
