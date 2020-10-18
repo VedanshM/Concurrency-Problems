@@ -39,7 +39,7 @@ typedef enum {
 	BASS,
 } instrument_t;
 
-char **instr_name = {
+char *instr_name[5] = {
 	"SINGER", "PIANO", "GUITAR", "VOILIN", "BASS"};
 
 typedef struct musician {
@@ -53,6 +53,7 @@ typedef struct musician {
 
 typedef struct stage {
 	int id;
+	int type;
 	musician_t *musician_performing;
 	musician_t *singer_performing;
 	struct timespec performance_endtime;
@@ -60,8 +61,8 @@ typedef struct stage {
 } stage_t;
 
 pthread_mutex_t global_mutex = PTHREAD_MUTEX_INITIALIZER;
-sem_t ac_sem, ec_sem, both_sem;
-int no_of_musicians, acoustic_stg_cnt, electric_stg_cnt, coord_cnt;
+sem_t ac_sem, ec_sem, both_sem, singer_sem;
+int musician_cnt, acoustic_stg_cnt, electric_stg_cnt, coord_cnt;
 int impatience_limit, t1, t2;
 stage_t *ac_stages, *ec_stages;
 
@@ -79,10 +80,10 @@ int max(int a, int b) {
 	return a > b ? a : b;
 }
 
-void musicians_init(int n);
+void musicians_init();
 void *musician_thread(void *);
 
-int perform_on_type(musician_t *msc, stage_t *stages, int stg_cnt)
+int perform_on_type(musician_t *msc, stage_t *stages, int stg_cnt);
 
 //   Colour escape codes
 #define BLK_COL "\033[30;1m"
