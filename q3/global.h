@@ -53,8 +53,8 @@ typedef struct musician {
 
 typedef struct stage {
 	int id;
-	int musician_performing;
-	int singer_performing;
+	musician_t *musician_performing;
+	musician_t *singer_performing;
 	struct timespec performance_endtime;
 	pthread_mutex_t mutex;
 } stage_t;

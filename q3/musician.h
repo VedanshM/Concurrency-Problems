@@ -11,18 +11,23 @@ void musicians_init(int n) {
 		switch (c) {
 		case 's':
 			musicians[i].instr = SINGER;
+			musicians[i].stage_type = BOTH_STAGE;
 			break;
 		case 'p':
 			musicians[i].instr = PIANO;
+			musicians[i].stage_type = BOTH_STAGE;
 			break;
 		case 'g':
 			musicians[i].instr = GUITAR;
+			musicians[i].stage_type = BOTH_STAGE;
 			break;
 		case 'v':
 			musicians[i].instr = VOILIN;
+			musicians[i].stage_type = ACOUSTIC_STAGE;
 			break;
 		case 'b':
 			musicians[i].instr = BASS;
+			musicians[i].stage_type = ELECTRIC_STAGE;
 			break;
 
 		default:
@@ -83,7 +88,7 @@ int perform_on_type(musician_t *msc, stage_t *stages, int stg_cnt) {
 			pthread_mutex_lock(&stages[i].mutex);
 			//assuming musicians enter completely empty stage
 			if (!stages[i].musician_performing && !stages[i].singer_performing) {
-				stages[i].musician_performing = 1;
+				stages[i].musician_performing = msc;
 				clock_gettime(CLOCK_MONOTONIC_RAW, &stages[i].performance_endtime);
 				int perform_time = randInt(t1, t2);
 				stages[i].performance_endtime.tv_nsec += perform_time * 1e9;
@@ -101,7 +106,7 @@ int perform_on_type(musician_t *msc, stage_t *stages, int stg_cnt) {
 					ts.tv_sec -= stages[i].performance_endtime.tv_sec;
 					nanosleep(&ts, NULL);
 				}
-				stages[i].musician_performing = 0;
+				stages[i].musician_performing = NULL;
 				break;
 			}
 			pthread_mutex_unlock(&(stages[i].mutex));
@@ -110,7 +115,7 @@ int perform_on_type(musician_t *msc, stage_t *stages, int stg_cnt) {
 		for (int i = 0; i < stg_cnt; i++) {
 			pthread_mutex_lock(&stages[i].mutex);
 			if (!stages[i].singer_performing) {
-				stages[i].singer_performing = 1;
+				stages[i].singer_performing = msc;
 				if (stages[i].musician_performing) {
 					stages[i].performance_endtime.tv_sec += 2;
 				} else {
@@ -129,7 +134,7 @@ int perform_on_type(musician_t *msc, stage_t *stages, int stg_cnt) {
 				ts.tv_sec -= stages[i].performance_endtime.tv_sec;
 				nanosleep(&ts, NULL);
 
-				stages[i].singer_performing = 0;
+				stages[i].singer_performing = NULL;
 			}
 			pthread_mutex_unlock(&(stages[i].mutex));
 		}
