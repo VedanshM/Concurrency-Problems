@@ -89,8 +89,9 @@ void *musician_thread(void *ptr) {
 			} else {
 				sem_wait(&ec_sem);
 				perform_on_type(msc, ec_stages, electric_stg_cnt);
-				sem_post(&both_sem);
+				sem_post(&ec_sem);
 			}
+			sem_post(&both_sem);
 			performed = 1;
 		}
 	}
