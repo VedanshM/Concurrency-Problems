@@ -145,11 +145,18 @@ int perform_on_type(musician_t *msc, stage_t *stages, int stg_cnt) {
 			pthread_mutex_lock(&stages[i].mutex);
 			if (!stages[i].singer_performing) {
 				stages[i].singer_performing = msc;
+				int solo = 0;
 				if (stages[i].musician_performing) {
 					stages[i].performance_endtime.tv_sec += 2;
 					printf(YLW_COL "%s joined %s's performance, performance extended by 2 sec.\n" RST_COL,
 						   msc->name, stages[i].musician_performing->name);
 				} else {
+					solo = 1;
+					sem_wait(&both_sem);
+					if (stages[i].type == ACOUSTIC_STAGE)
+						sem_wait(&ac_sem);
+					else
+						sem_wait(&ec_sem);
 					clock_gettime(CLOCK_REALTIME, &stages[i].performance_endtime);
 					int perform_time = randInt(t1, t2);
 					stages[i].performance_endtime.tv_sec += perform_time;
@@ -171,6 +178,13 @@ int perform_on_type(musician_t *msc, stage_t *stages, int stg_cnt) {
 				nanosleep(&ts, NULL);
 
 				stages[i].singer_performing = NULL;
+				if (solo) {
+					sem_post(&both_sem);
+					if (stages[i].type == ACOUSTIC_STAGE)
+						sem_post(&ac_sem);
+					else
+						sem_post(&ec_sem);
+				}
 				break;
 			}
 			pthread_mutex_unlock(&(stages[i].mutex));
