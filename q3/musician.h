@@ -126,12 +126,12 @@ int perform_on_type(musician_t *msc, stage_t *stages, int stg_cnt) {
 				if (stages[i].singer_performing) {
 					struct timespec ts;
 					clock_gettime(CLOCK_REALTIME, &ts);
-					ts.tv_nsec -= stages[i].performance_endtime.tv_nsec;
+					ts.tv_nsec = stages[i].performance_endtime.tv_nsec - ts.tv_nsec;
+					ts.tv_sec = stages[i].performance_endtime.tv_sec - ts.tv_sec;
 					if (ts.tv_nsec < 0) {
 						ts.tv_nsec += 1e9;
 						ts.tv_sec -= 1;
 					}
-					ts.tv_sec -= stages[i].performance_endtime.tv_sec;
 					nanosleep(&ts, NULL);
 				}
 				stages[i].musician_performing = NULL;
