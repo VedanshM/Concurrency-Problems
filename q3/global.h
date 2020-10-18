@@ -60,7 +60,7 @@ typedef struct stage {
 	pthread_mutex_t mutex;
 } stage_t;
 
-pthread_mutex_t global_mutex = PTHREAD_MUTEX_INITIALIZER;
+sem_t coord_sem;
 sem_t ac_sem, ec_sem, both_sem, singer_sem;
 int musician_cnt, acoustic_stg_cnt, electric_stg_cnt, coord_cnt;
 int impatience_limit, t1, t2;
@@ -94,6 +94,10 @@ int perform_on_type(musician_t *msc, stage_t *stages, int stg_cnt);
 #define MGN_COL "\033[35;1m"
 #define CYN_COL "\033[36;1m"
 #define WHT_COL "\033[37;1m"
+#define RED_BOLD_COL "\033[1;31m"
+#define GRN_BOLD_COL "\033[1;32m"
+#define YLW_BOLD_COL "\033[1;33m"
+#define CYN_BOLD_COL "\033[1;36m"
 #define RST_COL "\033[0m"
 
 #endif

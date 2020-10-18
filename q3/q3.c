@@ -8,6 +8,7 @@ int main() {
 
 	ac_stages = malloc(acoustic_stg_cnt * sizeof(stage_t));
 	ec_stages = malloc(electric_stg_cnt * sizeof(stage_t));
+	sem_init(&coord_sem, 0, coord_cnt);
 	sem_init(&ac_sem, 0, acoustic_stg_cnt);
 	sem_init(&ec_sem, 0, electric_stg_cnt);
 	sem_init(&both_sem, 0, acoustic_stg_cnt + electric_stg_cnt);

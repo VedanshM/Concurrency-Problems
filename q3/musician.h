@@ -101,9 +101,19 @@ void *musician_thread(void *ptr) {
 		fflush(0);
 		return NULL;
 	}
-	// collect tshirt
-	// printf("DEBUG: hi im %s %d\n", msc->name, performed);
+	ts.tv_sec = 0;
+	ts.tv_nsec = 5;
+	nanosleep(&ts, NULL);
+
+	// collecting tshirt
+	sem_wait(&coord_sem);
+	printf(CYN_COL "%s (%s) collecting Tshirt.\n" RST_COL,
+		   msc->name, instr_name[msc->instr]);
 	fflush(0);
+	sleep(2);
+	sem_post(&coord_sem);
+
+	return NULL;
 }
 
 int perform_on_type(musician_t *msc, stage_t *stages, int stg_cnt) {
