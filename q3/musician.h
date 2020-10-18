@@ -35,7 +35,6 @@ void musicians_init() {
 			musicians[i].instr = SINGER;
 			break;
 		}
-		musicians[i].state = NOT_ARRIVED;
 	}
 	for (int i = 0; i < musician_cnt; i++)
 		pthread_create(&(musicians[i].tid), NULL, musician_thread, musicians + i);

@@ -15,16 +15,6 @@
 #define BOTH_STAGE 2
 
 typedef enum {
-	NOT_ARRIVED,
-	WAITING_TO_PERFORM,
-	PERFORMING_SOLO,
-	PERFORMING_W_SINGER,
-	WAITING_FOR_TS,
-	COLLECTING_TS,
-	EXITED,
-} musician_state_t;
-
-typedef enum {
 	SINGER,
 	PIANO,
 	GUITAR,
@@ -37,7 +27,6 @@ char *instr_name[5] = {
 
 typedef struct musician {
 	char name[1024];
-	musician_state_t state;
 	instrument_t instr;
 	int stage_type;
 	int arrival_time;
