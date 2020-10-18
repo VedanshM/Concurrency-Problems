@@ -3,19 +3,12 @@
 
 #define _POSIX_C_SOURCE 200112L
 #include <fcntl.h>
-#include <inttypes.h>
-#include <limits.h>
 #include <pthread.h>
 #include <semaphore.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
-#include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
-#include <wait.h>
 
 #define ELECTRIC_STAGE 0
 #define ACOUSTIC_STAGE 1
