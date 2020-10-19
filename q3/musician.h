@@ -105,6 +105,13 @@ void *musician_thread(void *ptr) {
 	nanosleep(&ts, NULL);
 
 	// collecting tshirt
+
+	if (coord_cnt <= 0) {
+		printf("No Coordinator to give Tshirts!! %s is leaving sad.\n", msc->name);
+		fflush(0);
+		return NULL;
+	}
+
 	sem_wait(&coord_sem);
 	printf(CYN_COL "%s (%s) collecting Tshirt.\n" RST_COL,
 		   msc->name, instr_name[msc->instr]);
