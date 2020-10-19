@@ -14,6 +14,8 @@
 #include <wait.h>
 
 const long long BILLION = 1e9;
+int shm_id;
+key_t mem_key;
 
 void swap(int *a, int *b) {
 	int t = *a;
@@ -22,8 +24,8 @@ void swap(int *a, int *b) {
 }
 
 int *get_sharemem(size_t size) {
-	key_t mem_key = IPC_PRIVATE;
-	int shm_id = shmget(mem_key, size, IPC_CREAT | 0666);
+	mem_key = IPC_PRIVATE;
+	shm_id = shmget(mem_key, size, IPC_CREAT | 0666);
 	return shmat(shm_id, NULL, 0);
 }
 
@@ -171,4 +173,14 @@ int main() {
 		   " \n\t[%.2Lf] times faster than multi process concurrent merge sort and "
 		   " \n\t[%.2Lf] times faster than multi threaded concurrent merge sort.\n",
 		   (long double)(forked_dur) / norm_dur, (long double)(thrd_dur) / norm_dur);
+	if (shmdt(f_arr) == -1) {
+		perror("can't detach memory");
+		return 1;
+	}
+
+	if (shmctl(shm_id, IPC_RMID, NULL) == -1) {
+		perror("can't removed shared memory");
+		return 1;
+	}
+	return 0;
 }
