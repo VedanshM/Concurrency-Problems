@@ -75,7 +75,7 @@ void *zone_thread(void *arg) {
 			if (zn->batch->vacc_left == 0) {
 				zn->batch = NULL; // free this in compnay
 				pthread_mutex_unlock(&zn->comp->mutex);
-				printf(BLU_COL "Zone %d has run out of vaccines", zn->id);
+				printf(BLU_COL "Zone %d has run out of vaccines\n", zn->id);
 				fflush(0);
 				break;
 			}

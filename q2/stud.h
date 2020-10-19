@@ -24,7 +24,7 @@ void *stud_thread(void *arg) {
 		float pr = get_vaccine(std);
 		int success = check_vaccine(pr);
 		if (success) {
-			printf(CYN_COL "Student %d has tested positive for antibodies.\n" RST_COL,
+			printf(MGN_COL "Student %d has tested positive for antibodies.\n" RST_COL,
 				   std->id);
 			fflush(0);
 			pthread_mutex_lock(&global_mutex);
@@ -33,7 +33,7 @@ void *stud_thread(void *arg) {
 			std->status = 1;
 			break;
 		} else {
-			printf(GRN_COL "Student %d has tested " RED_COL "negative" GRN_COL " for antibodies.\n" RST_COL, std->id);
+			printf(MGN_COL "Student %d has tested " RED_COL "negative" MGN_COL " for antibodies.\n" RST_COL, std->id);
 			fflush(0);
 			if (std->no_of_trials == 3) {
 				printf(RED_COL "Student %d is HOPELESS, going back to home.\n" RST_COL, std->id);
